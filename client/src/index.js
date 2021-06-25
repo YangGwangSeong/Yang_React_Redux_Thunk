@@ -3,14 +3,18 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
 import { Provider } from "react-redux";
 import rootReducer  from "./modules";
-
+import logger from "redux-logger";
 //npm install redux-logger
-
+//npm install redux-devtools-extension
 // 콤바인리듀서로 여러개의 리듀서 등록하기
-const store = createStore(rootReducer);
+const store = createStore(
+  rootReducer, 
+  composeWithDevTools(applyMiddleware(logger))
+);
 
 ReactDOM.render(
   <Provider store={store}>
