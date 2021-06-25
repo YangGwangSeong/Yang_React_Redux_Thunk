@@ -7,6 +7,8 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import rootReducer  from "./modules";
 
+//npm install redux-logger
+
 // 콤바인리듀서로 여러개의 리듀서 등록하기
 const store = createStore(rootReducer);
 
