@@ -3,10 +3,17 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import rootReducer  from "./modules";
+
+// 콤바인리듀서로 여러개의 리듀서 등록하기
+const store = createStore(rootReducer);
+
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
+  </Provider>,
   document.getElementById('root')
 );
 
