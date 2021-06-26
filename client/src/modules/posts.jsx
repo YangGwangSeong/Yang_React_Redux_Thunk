@@ -1,5 +1,5 @@
 import * as postsAPI from "../api/posts"; // api/posts 안의 함수 모두 불러오기
-
+import { createPromiseThunk } from '../lib/asyncUtils';
 /* 
     프로미스를 다루는 리덕스 모듈을 다룰때 주의사항
 
@@ -34,9 +34,9 @@ const GET_POST = "GET_POST";
 const GET_POST_SUCCESS = "GET_POST_SUCCESS";
 const GET_POST_ERROR = "GET_POST_ERROR";
 
+/*
 // thunk 를 사용 할 때, 꼭 모든 액션들에 대하여 액션 생성함수를 만들 필요는 없습니다.
 // 그냥 thunk 함수에서 바로 액션 객체를 만들어주어도 괜찮습니다.
-
 export const getPosts = () => async dispatch => {
     dispatch({ type : GET_POSTS });
     try{
@@ -57,6 +57,9 @@ export const getPost = (id) => async dispatch => {
         dispatch({ type : GET_POST_ERROR, error : e});
     }
 }
+*/
+
+export const getPosts = createPromiseThunk(GET_POSTS, postsAPI.getPosts);
 
 export default function posts(state = initialState, action){
     switch (action.type){
@@ -117,7 +120,7 @@ export default function posts(state = initialState, action){
             };
         default :
             return state;
-
+            
     }
 }
 
