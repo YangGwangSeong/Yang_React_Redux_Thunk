@@ -78,7 +78,12 @@ export const getPost = (id) => async dispatch => {
 export const getPosts = createPromiseThunk(GET_POSTS, postsAPI.getPosts);
 export const getPost = createPromiseThunkById(GET_POST, postsAPI.getPostById);
 
-export const clearPost = () => ({ type : CLEAR_POST });
+//export const clearPost = () => ({ type : CLEAR_POST });
+
+// 3번째 인자를 사용하면 withExtraArgument 에서 넣어준 값들을 사용 할 수 있습니다.
+export const goToHome = () => (dispatch, getState, { history }) => {
+    history.push('/');
+};
 
 export default function posts(state = initialState, action){
     switch (action.type){

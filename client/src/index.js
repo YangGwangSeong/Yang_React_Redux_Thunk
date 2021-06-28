@@ -13,24 +13,32 @@ import logger from "redux-logger";
 //npm install react-router-dom
 // 콤바인리듀서로 여러개의 리듀서 등록하기
 
-import { BrowserRouter } from "react-router-dom";
-
-
+import { Router } from "react-router-dom";
+import { createBrowserHistory } from 'history';
 
 import ReduxThunk from "redux-thunk";
+
+const customHistory = createBrowserHistory();
+
+
+
 // redux-thunk 사용하기 위해 함수를 디스패치 가능. dispatch 와 getState를 파라미터로 받아와줘야함.
 
 const store = createStore(
   rootReducer, 
-  composeWithDevTools(applyMiddleware(ReduxThunk,logger))
+  composeWithDevTools(applyMiddleware(
+    ReduxThunk.withExtraArgument({history: customHistory})
+    ,logger
+    )
+  )
 );
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router history={customHistory}>
     <Provider store={store}>
       <App />
     </Provider>
-  </BrowserRouter>,
+  </Router>,
   document.getElementById('root')
 );
 
