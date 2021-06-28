@@ -1,5 +1,5 @@
 import * as postsAPI from "../api/posts"; // api/posts 안의 함수 모두 불러오기
-import { createPromiseThunk } from '../lib/asyncUtils';
+import { createPromiseThunk, reducerUtils, handleAsyncActions } from '../lib/asyncUtils';
 /* 
     프로미스를 다루는 리덕스 모듈을 다룰때 주의사항
 
@@ -11,6 +11,7 @@ import { createPromiseThunk } from '../lib/asyncUtils';
 
 
 /* 초기값 설정 */
+/*
 const initialState = {
     posts: {
         loading : false,
@@ -23,6 +24,13 @@ const initialState = {
         error : null
     }
 };
+*/
+// initialState 쪽도 반복되는 코드를 initial() 함수를 사용해서 리팩토링
+const initialState = {
+    
+    posts : reducerUtils.initial(),
+    post : reducerUtils.initial()
+}
 
 // 포스트 여러개 조회하기
 const GET_POSTS = "GET_POSTS"; //  요청 시작
@@ -60,68 +68,101 @@ export const getPost = (id) => async dispatch => {
 */
 
 export const getPosts = createPromiseThunk(GET_POSTS, postsAPI.getPosts);
+export const getPost = createPromiseThunk(GET_POST, postsAPI.getPostById);
 
 export default function posts(state = initialState, action){
     switch (action.type){
         case GET_POSTS:
-            return {
-                ...state,
-                posts: {
-                    loading : true,
-                    data : null,
-                    error : null
-                }
-            };
-        case GET_POSTS_SUCCESS :
-            return {
-                ...state,
-                posts : {
-                    loading : true,
-                    data : action.posts,
-                    error : null
-                }
-            };
-        case GET_POSTS_ERROR : 
-            return {
-                ...state,
-                posts : {
-                    loading : true,
-                    data : null,
-                    error : action.error
-                }
-            };
-        /* post 파라미터로 가져올때 */
-        case GET_POST : 
-            return {
-                ...state,
-                post : {
-                    loading : true,
-                    data : null,
-                    error : null
-                }
-            };
-        case GET_POST_SUCCESS : 
-            return {
-                ...state,
-                post : {
-                    loading : true,
-                    data : action.data,
-                    error : null
-                }
-            };
-        case GET_POST_ERROR : 
-            return {
-                ...state,
-                post : {
-                    loading : true,
-                    data : null,
-                    error : action.error
-                }
-            };
-        default :
+        case GET_POSTS_SUCCESS:
+        case GET_POSTS_ERROR:
+            const postsReducer = handleAsyncActions(GET_POSTS, "posts");
+            return postsReducer(state,action);
+        case GET_POST:
+        case GET_POST_SUCCESS:
+        case GET_POST_ERROR:
+            const postReducer = handleAsyncActions(GET_POST, "post");
+            return postReducer(state,action);
+        default : 
             return state;
+    };
+    // switch (action.type){
+    //     case GET_POSTS:
+    //         return {
+    //             ...state,
+    //             /*
+    //             posts: {
+    //                 loading : true,
+    //                 data : null,
+    //                 error : null
+    //             }
+    //             */
+    //             posts : reducerUtils.loading(),
+    //         };
+    //     case GET_POSTS_SUCCESS :
+    //         return {
+    //             ...state,
+    //             /*
+    //             posts : {
+    //                 loading : true,
+    //                 data : action.posts,
+    //                 error : null
+    //             }
+    //             */
+    //             posts : reducerUtils.success(action.payload) // action.posts -> action.payload로 변경
+    //         };
+    //     case GET_POSTS_ERROR : 
+    //         return {
+    //             ...state,
+    //             /*
+    //             posts : {
+    //                 loading : true,
+    //                 data : null,
+    //                 error : action.error
+    //             }
+    //             */
+    //             posts : reducerUtils.error(action.error)
+    //         };
+    //     /* post 파라미터로 가져올때 */
+    //     case GET_POST : 
+    //         return {
+    //             ...state,
+    //             /*
+    //             post : {
+    //                 loading : true,
+    //                 data : null,
+    //                 error : null
+    //             }
+    //             */
+    //            post : reducerUtils.loading()
+    //         };
+    //     case GET_POST_SUCCESS : 
+    //         return {
+    //             ...state,
+    //             /*
+    //             post : {
+    //                 loading : true,
+    //                 data : action.data,
+    //                 error : null
+    //             }
+    //             */
+    //             post : reducerUtils.success(action.payload) // action.post -> action.payload 로 변경
+    //         };
+    //     case GET_POST_ERROR : 
+    //         return {
+    //             ...state,
+    //             /*
+    //             post : {
+    //                 loading : true,
+    //                 data : null,
+    //                 error : action.error
+    //             }
+    //             */
+    //            post : reducerUtils.error(action.error)
+    //         };
+    //     default :
+    //         return state;
             
-    }
+    // }
 }
 
 
