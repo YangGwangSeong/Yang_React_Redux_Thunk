@@ -10,7 +10,11 @@ import rootReducer  from "./modules";
 import logger from "redux-logger";
 //npm install redux-logger
 //npm install redux-devtools-extension
+//npm install react-router-dom
 // 콤바인리듀서로 여러개의 리듀서 등록하기
+
+import { BrowserRouter } from "react-router-dom";
+
 
 
 import ReduxThunk from "redux-thunk";
